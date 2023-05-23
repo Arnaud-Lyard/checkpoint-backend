@@ -5,15 +5,24 @@ import Country, { CountryInput } from "../entity/Country";
 @Resolver(Country)
 export class CountryResolver {
   @Query(() => [Country])
-  async countries(): Promise<Country[]> {
+  async getAllCountries(): Promise<Country[]> {
     return datasource.getRepository(Country).find();
   }
 
   @Mutation(() => Country)
   async createCountry(@Arg("data") data: CountryInput): Promise<Country> {
-    const { raw: country } = await datasource
-      .getRepository(Country)
-      .insert(data);
+    const country = await datasource.getRepository(Country).save(data);
     return country;
+  }
+
+  @Query(() => Country)
+  async getCountryByCode(@Arg("code") code: string): Promise<Country> {
+    const countryExist = await datasource
+      .getRepository(Country)
+      .findOne({ where: { code } });
+
+    if (countryExist === null) throw new Error("Country not found");
+
+    return countryExist;
   }
 }
