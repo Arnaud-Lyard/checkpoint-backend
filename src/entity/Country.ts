@@ -1,5 +1,6 @@
 import { Field, InputType, ObjectType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import Continent from "./Continent";
 
 @ObjectType()
 @Entity()
@@ -19,6 +20,9 @@ class Country {
   @Column()
   @Field()
   emoji: string;
+
+  @ManyToOne(() => Continent, (continent) => continent.countries)
+  continent: Continent;
 }
 
 @InputType()
@@ -31,6 +35,8 @@ export class CountryInput {
 
   @Field()
   emoji: string;
+  @Field()
+  continentCode: string;
 }
 
 export default Country;

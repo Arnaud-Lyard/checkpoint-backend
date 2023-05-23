@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import express from "express";
-import cors from "cors";
 import { ApolloServer } from "apollo-server";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { buildSchema } from "type-graphql";
 import database from "./database/database";
 import { CountryResolver } from "./resolver/CountryResolver";
+import { ContinentResolver } from "./resolver/ContinentResolver";
 const app = express();
 
 app.use(express.json());
@@ -14,7 +14,7 @@ const start = async (): Promise<void> => {
   await database.initialize();
 
   const schema = await buildSchema({
-    resolvers: [CountryResolver],
+    resolvers: [CountryResolver, ContinentResolver],
   });
 
   const server = new ApolloServer({

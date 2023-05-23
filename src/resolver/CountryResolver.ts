@@ -1,6 +1,7 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import datasource from "../database/database";
 import Country, { CountryInput } from "../entity/Country";
+import Continent from "../entity/Continent";
 
 @Resolver(Country)
 export class CountryResolver {
@@ -12,6 +13,9 @@ export class CountryResolver {
   @Mutation(() => Country)
   async createCountry(@Arg("data") data: CountryInput): Promise<Country> {
     const country = await datasource.getRepository(Country).save(data);
+    const continent = await datasource.getRepository(Continent).save({
+      continentCode: data.continentCode,
+    });
     return country;
   }
 
